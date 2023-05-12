@@ -1,0 +1,32 @@
+{% extends 'customer.html' %}
+{% load static %}
+{% block styles %}
+  <div class="col-lg-5 shadow mx-auto p-0">
+    <div class="p-4">
+      <h3>Tạo Tài Khoản</h3>
+      <hr>
+      <form action="" method="post" novalidate class="shadow p-5">
+        {% csrf_token %}
+        {% for fm in form %}
+          {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.error|striptags}}</small>
+          <br>
+        {% endfor %}
+        <input type="submit" value="Submit" class="btn btn-success"> <br>
+        <div class="text-center text-dark fw-bold">
+          <small>Bạn đã có tài khoản ? <a href="{% url 'login' %}" class="text-danger">Login</a></small>
+        </div>
+        {% if form.non_field_errors %}
+          {% for error in form.non_field_errors %}
+            <p class="alert alert-danger my-3">{{error}}</p>
+          {% endfor %}
+        {% endif %}
+        {% if messages %}
+          {% for msg in messages %}
+          <div class="alert alert-{{msg.tags}}" role="alert">{{msg}}</div>
+          {% endfor %}
+        {% endif %}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

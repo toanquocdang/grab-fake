@@ -1,0 +1,60 @@
+{% extends 'customer.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+	{% if messages %}
+		{% for msg in messages %}
+			<div class="alert alert-danger" role="alert">
+				{{msg}}
+			</div>
+		{% endfor %}
+	{% endif %}
+	<div class="row mt-5">
+		<div class="col-sm-6">
+			<h4>Tóm Tắt Hóa Đơn</h4>
+			<hr>
+			{% for item in cart_items %}
+			<div class="card mb-2">
+				<div class="card-body">
+					<h5>Món ăn: {{item.product.name}}</h5>
+					<p>Số Lượng: {{item.quantity}}</p>
+					<p class="fw-bold">Giá: {{item.product.price}}</p>
+				</div>
+			</div>
+			{% endfor %}
+			<p class="fw-bold">Tổng Bill + Phí ship = {{totalamount}}</p>
+		</div>
+		<div class="col-sm-4 offset-sm-1">
+			<h4>Vui lòng chọn địa chỉ nhận hàng !</h4>
+			<hr>
+			<form method="post" id ="myform">
+				{% csrf_token %}
+				{% for ad in add %}
+				<div class="card">
+					<div class="card-body">
+						<h5>{{ad.name}}</h5>
+						<p>Số Điện Thoại: {{ad.phone}}</p>
+						<p>{{ad.address}} {{ad.city}} {{ad.state}}</p>
+					</div>
+				</div>
+				<div>
+					<div class="form-check mt-2 mb-5">
+						<input  class="form-check-input" type="radio" name="custid" id="custadd{{forloop.counter}}" value = "{{ad.id}}">
+						<label class="form-check-label fw-bold" for="custadd{{forloop.counter}}">
+							Địa chỉ: {{forloop.counter}}
+						</label>
+					</div>
+					{% endfor %}
+					<div class="form-check mb-3">
+						<label for="totamount" class="form-label">Tổng Cộng: </label>
+						<input type="number" name="totamount" class="form-control" value="{{totalamount}}" readonly>
+					</div>
+					<div class="d-gird"> <a href="/done" class="btn btn-primary">Đặt Hàng</a></div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+    
+
+{% endblock %}

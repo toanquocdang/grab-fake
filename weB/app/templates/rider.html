@@ -1,0 +1,31 @@
+{% extends 'customer.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="text-end">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdcA7OeXBS58oaxiTQCVg_op6Lh5-3Jy6g4jgwMsLKZ8DjKQQ/viewform?usp=share_link" class="btn btn-success">Đăng Ký Làm Tài Xế</a>
+  </div>
+</div>
+<h3 style="font-size: 24px; color: #333; text-align: center; font-weight: bold; margin-bottom: 20px;">Company Rider Information</h3>
+<div class="row" style="width: 100%;">
+  {% for rider in riders %}
+  <div class="col-lg-3">
+    <div class="card mb-3">
+      <div class="image-container" style="position: relative; overflow: hidden;">
+        <img class="card-img-top" src="{{ rider.ImageURL }}" alt="Hình ảnh" style="transition: transform 0.5s ease;" height="300" width="200">
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ rider.name }}</h5>
+        <hr>
+        <p class="card-text"><strong>Email:</strong> {{ rider.email }}</p>
+        <p class="card-text"><strong>Số Điện Thoại:</strong> {{ rider.phone }}</p>
+        <p class="card-text"><strong>Phương tiện:</strong> {{ rider.xe }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+<br /><br /><br />
+{% endblock %}
