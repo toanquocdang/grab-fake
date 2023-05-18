@@ -36,81 +36,47 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              {% if request.user.is_authenticated %}
               <li>
-                <a class="nav-link active" aria-current="page" href="/customer" style="padding: 0.5rem 1.5rem;">FoodOrder</a>
-              </li>
+                <a class="nav-link active" aria-current="page" href="/home" style="padding: 0.5rem 1.5rem;">Home</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="/rider" style="padding: 0.5rem 1.5rem;">Rider</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="/merchants" style="padding: 0.5rem 1.5rem;">Merchants</a>
-            </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="/contact" style="padding: 0.5rem 1.5rem;">Contact Us</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="/about" style="padding: 0.5rem 1.5rem;">About Us</a>
-              </li>
             </ul>
-            <form class="d-flex" role="search" method= POST action="{% url 'search' %}">
-                {% csrf_token %}
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
-              <button class="btn btn-outline-dark" type="submit">Search</button>
-            </form>
+              <form class="d-flex" role="search" method= POST action="{% url 'search' %}">
+                  {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
+                <button class="btn btn-outline-dark" type="submit">Search</button>
+              </form>
           </div>
           <div>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li>
+                    <a class="nav-link active" aria-current="page" href="/customer" style="font-size: 1.3rem;">🍔</a>
+                </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.3rem;">
                       👤
                     </a>
                     <ul class="dropdown-menu">
                       <li><a class="dropdown-item" href="{% url 'profile' %}">Trang cá nhân</a></li>
                       <li><a class="dropdown-item" href="{% url 'orders' %}">Đơn Hàng</a></li>
+                      <li><a class="dropdown-item" href="#">Xem Thống kê</a></li>
                       <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Đổi Mật Khẩu</a></li>
                       <li><a class="dropdown-item" href="/logout">Đăng Xuất</a></li>
                       
                     </ul>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" href=" {% url 'showcart' %}"><span class="badge bg-danger">{% if totalitem > 0 %} {{totalitem}} {% endif %}</span> 🛒</a>
+                    <a class="nav-link active" href=" {% url 'showcart' %}" style="font-size: 1.3rem;"><span class="badge bg-danger">{% if totalitem > 0 %} {{totalitem}} {% endif %}</span> 🛒</a>
                   </li>
-                  {% else %}
-                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link active" href="{% url 'login' %}" style="padding: 0.5rem 1.5rem;">Login</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" href="/signup" style="padding: 0.5rem 1.5rem;">SignUp</a>
-                </li>
-              {% endif %}
-            </ul>
           </div>
         </div>
       </nav>
-      <div>
-        {% block banner_slider %}
-
-        {% endblock banner_slider %}
-      </div>
     <div>
 
         {% block content %}
         
         {% endblock %}
     </div>
-    <div>
-      {% block styles %}
 
-      {% endblock %}
-    </div>
-    <div>
-      {% block payment-gateway %}
-
-      {% endblock payment-gateway %}
-    </div>
  
     <script src="{%static 'app\js\all.min.js' %}"></script>
     <script src="{%static 'app\js\myscript.js' %}"></script>

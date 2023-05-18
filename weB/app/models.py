@@ -1,6 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
+class Account(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ROLE_CHOICES = (
+        ('Customer', 'Customer'),
+        ('Rider', 'Rider'),
+        ('Merchants', 'Merchants'),
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='Customer')
+    def __str__(self):
+        return self.user.username
+    
 class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,blank=False)
     name = models.CharField(max_length=200, null=True)
@@ -11,11 +22,22 @@ class Customer(models.Model):
     address = models.CharField(max_length=200,null=True)
     def __str__(self):
         return self.name
-    
+
+class Merchants(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
+    name = models.CharField(max_length=200, null=True)
+    email = models.CharField(max_length=200, null=True)
+    phone = models.IntegerField(default=0)
+    address_rd = models.CharField(max_length=200,null=True)
+    def __str__(self):
+        return self.name
+       
 class Product(models.Model):
+    merchants =  models.ForeignKey(Merchants, on_delete=models.CASCADE,blank=True, null=True)
     name = models.CharField(max_length=200, null=True)
     price = models.FloatField()
     digital = models.BooleanField(default=False, null=True, blank=False)
+    address = models.CharField(max_length=200,null=True)
     image = models.ImageField(null=True, blank=True)
     def __str__(self):
         return self.name
@@ -57,14 +79,15 @@ class OrderPlaced(models.Model):
         return self.quantity * self.product.price
     
 Status_Choices = (
-    ('Xe số','Xe số'),
-    ('Xe tay ga','Xe tay ga'),
-    ('oto','oto'),
+    ('CarNumber','CarNumber'),
+    ('Car','Car'),
+    ('motorbike','motorbike'),
 )
 class Rider(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200, null=True)
-    xe = models.CharField(max_length=50, choices=Status_Choices, default='Xe số')
+    xe = models.CharField(max_length=50, choices=Status_Choices, default='CarNumber')
     phone = models.IntegerField(default=0)
     address_rd = models.CharField(max_length=200,null=True)
     image = models.ImageField(null=True, blank=True)
@@ -78,11 +101,3 @@ class Rider(models.Model):
             url = ''
         return url
 
-class Merchants(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length=200, null=True)
-    phone = models.IntegerField(default=0)
-    address_rd = models.CharField(max_length=200,null=True)
-    def __str__(self):
-        return self.name

@@ -1,0 +1,27 @@
+{% extends 'merchants.html' %}
+{% load static %}
+{% block merchants %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="card-title text-center">Add Product</h1>
+          <br/><br/>
+          {% if submitted %}
+          <p class="text-center">Your Product was submitted successfully!</p>
+          {% else %}
+          <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="text-center">
+              <button type="submit" class="btn btn-danger">Submit</button>
+            </div>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,31 +1,74 @@
-{% extends 'customer.html' %}
 {% load static %}
-{% block content %}
-<div class="container">
-  <div class="text-end">
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdcA7OeXBS58oaxiTQCVg_op6Lh5-3Jy6g4jgwMsLKZ8DjKQQ/viewform?usp=share_link" class="btn btn-success">Đăng Ký Làm Tài Xế</a>
-  </div>
-</div>
-<h3 style="font-size: 24px; color: #333; text-align: center; font-weight: bold; margin-bottom: 20px;">Company Rider Information</h3>
-<div class="row" style="width: 100%;">
-  {% for rider in riders %}
-  <div class="col-lg-3">
-    <div class="card mb-3">
-      <div class="image-container" style="position: relative; overflow: hidden;">
-        <img class="card-img-top" src="{{ rider.ImageURL }}" alt="Hình ảnh" style="transition: transform 0.5s ease;" height="300" width="200">
-      </div>
-      <div class="card-body">
-        <h5 class="card-title">{{ rider.name }}</h5>
-        <hr>
-        <p class="card-text"><strong>Email:</strong> {{ rider.email }}</p>
-        <p class="card-text"><strong>Số Điện Thoại:</strong> {{ rider.phone }}</p>
-        <p class="card-text"><strong>Phương tiện:</strong> {{ rider.xe }}</p>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider</title>
+    
 
+      
+    <!-- css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="{%static 'app\css\main.css' %}">
+    <link rel="stylesheet" href="{%static 'app\css\all.min.css' %}">
+    <link rel="stylesheet" href="{%static 'app\css\owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{%static 'app\css\style.css' %}">
+    <!-- js -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{%static 'app\js\all.min.js' %}"></script>
+    <script src="{%static 'app\js\myscript.js' %}"></script>
+    <script src="{%static 'app\js\owl.carousel.min.js' %}"></script>
 
-<br /><br /><br />
-{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'app/images/s1.png' %}" width="70" height="50">
+            </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            </ul>
+              <form class="d-flex" role="search" method= POST action="{% url 'search' %}">
+                  {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
+                <button class="btn btn-outline-dark" type="submit">Search</button>
+              </form>
+          </div>
+          <div>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.3rem;">
+                      👤
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'profilerider' %}">Trang cá nhân</a></li>
+                      <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                      <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Đổi Mật Khẩu</a></li>
+                      <li><a class="dropdown-item" href="/logout">Đăng Xuất</a></li>
+                      
+                    </ul>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href=" {% url 'ordersmc' %}" style="font-size: 1.3rem;"><span class="badge bg-danger">{% if totalitem > 0 %} {{totalitem}} {% endif %}</span> ✅</a>
+                  </li>
+          </div>
+        </div>
+      </nav>
+      <h3 style="font-size: 24px; color: #333; text-align: center; font-weight: bold; margin-bottom: 20px;">
+        All Orders</h3>
+      {% block content %}
+      {% endblock %}
+    <script src="{%static 'app\js\all.min.js' %}"></script>
+    <script src="{%static 'app\js\myscript.js' %}"></script>
+    <script src="{%static 'app\js\owl.carousel.min.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends 'merchants.html' %}
+{% load static %}
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <h3>Welcome <span class="text-capitalize">{{request.user}}</span></h3>
+    </div>
+    <div class="col-sm-2 border-end">
+        <ul class="list-unstyled">
+            <li class="d-grid"><a href="{% url 'profilemerchants' %}" class="btn"> Trang Cá Nhân</a></li>
+            <li class="d-grid"><a href="{% url 'merchantsaddress' %}" class="btn btn-primary">Địa chỉ</a></li>
+        </ul>
+    </div>
+    <div class="col-sm-9 offset-sm-1">
+        <div class="row">
+            {% for merchant in merchants %}
+            <div class="col-sm-6">
+                <div class="cart m-2">
+                    <div class="card-body">
+                        <p> Name: {{merchant.name}}</p>
+                        <p> Email: {{merchant.email}}</p>
+                        <p> Địa Chỉ: {{merchant.address_rd}}</p>
+                        <p> Số Điện Thoại: {{merchant.phone}}</p>
+                        <p class="text-center">
+                        <a href="{% url 'updateaddrider' pk=merchant.id %}" type="button" class="btn btn-primary">Update</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

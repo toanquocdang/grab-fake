@@ -12,11 +12,15 @@ urlpatterns = [
     path('login', login, name='login'),
     path('signup/', signup, name='signup'),
     path('customer/', customer, name='customer'),
-    path('rider', rider, name='rider'),  
+    path('rider', views.ordersRider, name='rider'),  
     path('merchants', merchants, name='merchants'),
+    path('addproduct', views.addproduct, name='addproduct'),
     path('password_reset', signup, name='password_reset'),
     path('profile/', views.ProfileViews.as_view(), name='profile'),
+    path('profilemerchants/', views.ProfileViewsMerchants.as_view(), name='profilemerchants'),
     path('address/', views.address, name='address'),
+    path('merchantsaddress/', views.merchantsaddress ,name='merchantsaddress'),
+    path('updateaddrider/<int:pk>', views.updateAddressMerchants.as_view(), name='updateaddrider'),
     path('updateaddress/<int:pk>', views.updateAddress.as_view(), name='updateaddress'),
     path('passwordchange/', auth_view.PasswordChangeView.as_view(template_name='changepassword.html',form_class=MyPasswordChangeForm, success_url = '/passwordchangedone'), name = 'passwordchange'),
     path('passwordchangedone', auth_view.PasswordChangeDoneView.as_view(template_name='passwordchangedone.html'), name = 'passwordchangedone'),
@@ -35,9 +39,16 @@ urlpatterns = [
     path('minuscart/', views.minus_cart),
     path('removecart/', views.remove_cart),
     path('orders/', views.orders, name='orders'),
+    path('ordersmc/', views.ordersmc, name='ordersmc'),
     path('done/', views.done, name='done'),
     path('contact/', views.contact, name='contact'),
     path('about/', views.about, name='about'),
     path('search/', views.search, name='search'),
+    path('update_order_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
+    
+    path('profilerider/', views.ProfileViewsRider.as_view(), name='profilerider'),
+    path('rideraddress/', views.rideraddress ,name='rideraddress'),
+    path('updatemerchants/<int:pk>', views.updateAddressRider.as_view(), name='updatemerchants'),
 
+   
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
