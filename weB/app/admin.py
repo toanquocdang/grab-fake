@@ -19,5 +19,6 @@ admin.site.register(Cart)
 admin.site.register(OrderPlaced)
 admin.site.register(Rider)
 admin.site.register(Merchants)
+admin.site.register(RiderSavedOrders)
 
 

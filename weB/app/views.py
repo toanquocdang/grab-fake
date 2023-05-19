@@ -11,7 +11,7 @@ from django.db.models import Q
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'base.html')
 
 def login(request):
     if request.method == 'GET':
@@ -297,6 +297,10 @@ def rider(request):
 
 def addproduct(request):
     submitted = False
+    merchants = Merchants.objects.all()
+    for merchant in merchants:
+        if not isinstance(merchant.name, str):
+            merchant.delete()
     if request.method == "POST":
         form= ProductForm (request.POST)
         if form.is_valid():
@@ -311,15 +315,20 @@ def addproduct(request):
                 submitted =True  
     form = ProductForm
     return render(request, 'addproduct.html',{'form':form, 'submitted': submitted})
+
 def merchants(request):
-    totalitem = 0
-    if request.user.is_authenticated:
-        totalitem = len(Cart.objects.filter(user=request.user))
     user = request.user
+    merchant = Merchants.objects.filter(user=user)
+    name = 'temp'
+    if not merchant:
+        merchant = Merchants(user=user, name = name)
+        merchant.save()
     merchants = Merchants.objects.get(user=user)
     products = Product.objects.filter(merchants=merchants)
     context = {'products': products}
     return render(request, 'productmerchants.html', context)
+
+
 
 def rider(request):
     riders = Rider.objects.all()
@@ -415,3 +424,83 @@ class updateAddressRider(View):
         else:
             messages.warning(request,"Lỗi !!!!")
         return redirect('rideraddress')
+    
+
+def dashboardcus(request):
+    user = request.user
+    customer = Customer.objects.filter(user=user)
+    orders = OrderPlaced.objects.filter(user = user)
+    total_order = orders.count()
+    dilivery = OrderPlaced.objects.filter(status = 'Delivered').count()
+    pending = OrderPlaced.objects.filter(status = 'Pending').count()
+    context = {
+        'orders': orders,
+        'customer': customer,
+        'total_order':total_order,
+        'dilivery': dilivery,
+        'pending': pending,
+
+    }
+    return render(request, 'dashboardcustomer.html', context)
+
+
+def cancel_order(request, order_id):
+    order = OrderPlaced.objects.get(id=order_id)
+    if order.status == 'Pending':
+        order.status = 'Cancel'
+        order.save()
+        messages.success(request, "Bạn đã hủy đơn hàng thành công.")
+    else:
+        messages.error(request, "Bạn không thể hủy đơn hàng.")
+    return redirect('dashboardcus')
+
+
+def dashboardmer(request):
+    user = request.user
+    order_placed = OrderPlaced.objects.all()
+    user = request.user
+    merchants = Merchants.objects.get(user=user)
+    products_added_by_merchant = Product.objects.filter(merchants=merchants)
+    merchant = Merchants.objects.filter(user=user)
+    count = 0
+    total_cost = 0
+    count1 = 0
+    orders = []
+    for order in order_placed:
+        for productsadd in products_added_by_merchant:
+            if order.product.name == productsadd.name:
+                total_cost = total_cost + productsadd.price
+                orders.append(order)
+                if order.status == "Delivered":
+                    count = count + 1
+                elif order.status == 'Pending':
+                    count1 = count1 + 1
+    context = {
+        'count': count,
+        'total_cost': total_cost,
+        'count1': count1,
+        'orders': orders,
+        'merchant': merchant
+    }
+    return render(request, 'dashboardmer.html', context)
+
+from django.shortcuts import get_object_or_404
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product.delete()
+    return redirect('merchants')
+
+
+def ridersave(request, order_id):
+    order = get_object_or_404(OrderPlaced, id=order_id)
+    rider = get_object_or_404(Rider, user=request.user)  # Assuming the rider is authenticated
+    saved_order = RiderSavedOrders.objects.create(user=rider.user, rider=rider, name=rider.name, email=rider.email, xe=rider.xe, phone=rider.phone, address_rd=rider.address_rd)
+    saved_order.orders.add(order)
+    saved_order.save()
+    order.delete()
+    return redirect('savedorders')
+
+def savedorders(request):
+    rider = get_object_or_404(Rider, user=request.user)  # Assuming the rider is authenticated
+    saved_orders = RiderSavedOrders.objects.filter(rider=rider)
+    return render(request, 'saveorder.html', {'saved_orders': saved_orders})

@@ -76,7 +76,7 @@ class OrderPlaced(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending')
     @property
     def total_cost(self):
-        return self.quantity * self.product.price
+        return self.quantity * self.product.price + 30
     
 Status_Choices = (
     ('CarNumber','CarNumber'),
@@ -101,3 +101,15 @@ class Rider(models.Model):
             url = ''
         return url
 
+
+class RiderSavedOrders(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE, blank=True, null=True)
+    name = models.CharField(max_length=200, null=True)
+    email = models.CharField(max_length=200, null=True)
+    xe = models.CharField(max_length=50, choices=Status_Choices, default='CarNumber')
+    phone = models.IntegerField(default=0)
+    address_rd = models.CharField(max_length=200,null=True)
+    image = models.ImageField(null=True, blank=True)
+    def __str__(self):
+        return self.name

@@ -1,0 +1,43 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* CSS cho hình ảnh */
+    .full-screen-image {
+        width: 100%;
+        height: 100vh;
+        object-fit: cover;
+    }
+
+    /* CSS cho nội dung */
+    .content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #fff;
+    }
+
+    .content h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+
+    .content button {
+        font-size: 18px;
+        padding: 10px 20px;
+        background-color: #e7088e;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+    }
+</style>
+
+<img src="{% static 'app/images/banner/s3.jpg' %}" class="full-screen-image">
+
+<div class="content">
+    <a class="nav-link active" href="/signup" style="padding: 0.5rem 1.5rem;"><button class="btn btn-primary">SignUp Now</button></a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'rider.html' %}
+{% block content %}
+    <h1>Danh sách đơn hàng đã lưu trữ</h1>
+    <ul>
+        {% for order in saved_orders %}
+            <li>{{ order }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

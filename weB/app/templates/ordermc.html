@@ -52,12 +52,8 @@
                         <form method="POST" action="{% url 'update_order_status' op.id %}">
                             {% csrf_token %}
                             <select name="status" class="form-select">
-                                <option value="Pending" {% if op.status == 'Pending' %}selected{% endif %}>Đang chờ</option>
-                                <option value="Accepted" {% if op.status == 'Accepted' %}selected{% endif %}>Đã chấp nhận</option>
+                                <option value="Accepted" {% if op.status == 'Accepted' %}selected{% endif %}>Nhận Đơn</option>
                                 <option value="Packed" {% if op.status == 'Packed' %}selected{% endif %}>Đã đóng gói</option>
-                                <option value="On the way" {% if op.status == 'On the way' %}selected{% endif %}>Đang vận chuyển</option>
-                                <option value="Delivered" {% if op.status == 'Delivered' %}selected{% endif %}>Đã giao hàng</option>
-                                <option value="Cancel" {% if op.status == 'Cancel' %}selected{% endif %}>Hủy</option>
                             </select>
                             <button type="submit" class="btn btn-primary">Cập nhật</button>
                         </form>

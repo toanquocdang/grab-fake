@@ -50,5 +50,12 @@ urlpatterns = [
     path('rideraddress/', views.rideraddress ,name='rideraddress'),
     path('updatemerchants/<int:pk>', views.updateAddressRider.as_view(), name='updatemerchants'),
 
-   
+    path('dashboardcus/', views.dashboardcus , name = 'dashboardcus'),
+    path('cancel-order/<int:order_id>/', views.cancel_order , name='cancel_order'),
+
+    path('dashboardmer/', views.dashboardmer , name = 'dashboardmer'),
+    path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('ridersave/<int:order_id>/', views.ridersave, name='ridersave'),
+     path('savedorders/', views.savedorders, name='savedorders')
+
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
