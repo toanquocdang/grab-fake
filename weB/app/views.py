@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login as loginUser
 from django.contrib.auth.decorators import login_required
 from .models import *
 import json
-from .forms import CutomerSingup, CustomerLogin, CutomerProfileForm, ProductForm, MerchantsProfileForm, RiderProfileForm
+from .forms import CutomerSingup, CustomerLogin, CutomerProfileForm, ProductForm, MerchantsProfileForm, RiderProfileForm, UpdatePriceForm
 from django.contrib import messages
 from django.views import View
 from django.db.models import Q
@@ -13,27 +13,35 @@ from django.db.models import Q
 def home(request):
     return render(request, 'base.html')
 
+
 def login(request):
     if request.method == 'GET':
         form1 = CustomerLogin()
         context = {
-            "form" : form1
+            "form": form1
         }
-        return render(request , 'login.html' , context=context )
+        return render(request, 'login.html', context=context)
     else:
-        form =CustomerLogin(data=request.POST)
+        form = CustomerLogin(data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(username = username , password = password)
+            user = authenticate(username=username, password=password)
             if user is not None:
-                loginUser(request , user)
-                return redirect('home')
+                loginUser(request, user)
+                # Chuyển hướng tương ứng với từng vai trò
+                if user.account.role == 'Customer':
+                    return redirect('profile')
+                elif user.account.role == 'Merchants':
+                    return redirect('profilemerchants')
+                elif user.account.role == 'Rider':
+                    return redirect('profilerider')
         else:
             context = {
-                "form" : form
+                "form": form
             }
-            return render(request , 'login.html' , context=context )
+            return render(request, 'login.html', context=context)
+
 
 def signup(request):
     form = CutomerSingup()
@@ -102,13 +110,16 @@ class ProfileViewsMerchants(View):
         form  = MerchantsProfileForm(request.POST)
         if form.is_valid():
             user = request.user
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            address_rd = form.cleaned_data['address_rd']
-            phone = form.cleaned_data['phone']
-            reg = Merchants(user = user, name=name ,email=email, address_rd=address_rd,phone=phone)
-            reg.save()
-            messages.success(request,'Lưu Thành Công')
+            if not Merchants.objects.filter(user=user).exists():
+                name = form.cleaned_data['name']
+                email = form.cleaned_data['email']
+                address_rd = form.cleaned_data['address_rd']
+                phone = form.cleaned_data['phone']
+                reg = Merchants(user = user, name=name ,email=email, address_rd=address_rd,phone=phone)
+                reg.save()
+                messages.success(request,'Lưu Thành Công')
+            else:
+                messages.warning(request, 'Bạn đã có địa chỉ vui lòng cập nhật trong Adderss')
         else:
             messages.warning(request,"Lỗi !!!!")
         return render(request, 'profilemerchants.html', locals())
@@ -168,7 +179,7 @@ def show_cart(request):
     for p in cart:
         value= p.quantity * p.product.price
         amount = amount+value
-    totalamount = amount + 40
+    totalamount = amount + 30
     return render(request,  'addtocart.html', locals())
 
 
@@ -292,6 +303,15 @@ def search(request):
         keys = Product.objects.filter(name = searched)
     return render(request, 'search.html', {'searched':search,'keys':keys})
 
+def searchmerchants(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        user = request.user
+        merchants = Merchants.objects.get(user = user)
+        keys = Product.objects.filter(name = searched, merchants = merchants)
+    return render(request, 'searchmer.html', {'searched':search,'keys':keys})
+
+
 def rider(request):
     return render(request, 'rider.html')
 
@@ -313,7 +333,7 @@ def addproduct(request):
             form = ProductForm
             if 'submitted' in request.GET:
                 submitted =True  
-    form = ProductForm
+    form = ProductForm()
     return render(request, 'addproduct.html',{'form':form, 'submitted': submitted})
 
 def merchants(request):
@@ -359,7 +379,7 @@ def update_order_status(request, order_id):
         order = OrderPlaced.objects.get(id=order_id)
         return render(request, 'update_order.html', {'order': order})
 
-# views.py
+
 
 
 def ordersRider(request):
@@ -473,7 +493,7 @@ def dashboardmer(request):
                 orders.append(order)
                 if order.status == "Delivered":
                     count = count + 1
-                elif order.status == 'Pending':
+                else:
                     count1 = count1 + 1
     context = {
         'count': count,
@@ -495,12 +515,23 @@ def ridersave(request, order_id):
     order = get_object_or_404(OrderPlaced, id=order_id)
     rider = get_object_or_404(Rider, user=request.user)  # Assuming the rider is authenticated
     saved_order = RiderSavedOrders.objects.create(user=rider.user, rider=rider, name=rider.name, email=rider.email, xe=rider.xe, phone=rider.phone, address_rd=rider.address_rd)
-    saved_order.orders.add(order)
+    saved_order.order = order
     saved_order.save()
-    order.delete()
     return redirect('savedorders')
 
 def savedorders(request):
     rider = get_object_or_404(Rider, user=request.user)  # Assuming the rider is authenticated
     saved_orders = RiderSavedOrders.objects.filter(rider=rider)
     return render(request, 'saveorder.html', {'saved_orders': saved_orders})
+
+def update_price(request, product_id):
+    product = Product.objects.get(id=product_id)
+    if request.method == 'POST':
+        form = UpdatePriceForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('merchants')
+    else:
+        form = UpdatePriceForm(instance=product)
+    
+    return render(request, 'updatepirce.html', {'form': form})

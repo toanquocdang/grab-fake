@@ -1,0 +1,69 @@
+{% extends 'merchants.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Update Price</h5>
+          <form method="post" class="update-price-form">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="{{ form.price.id_for_label }}">Price:</label>
+              {{ form.price }}
+              {% if form.price.errors %}
+                <div class="invalid-feedback">
+                  {{ form.price.errors|join:", " }}
+                </div>
+              {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Update Price</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .update-price-form {
+    margin-top: 20px;
+  }
+
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .card-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .form-group label {
+    font-weight: bold;
+  }
+
+  .invalid-feedback {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+</style>
+{% endblock %}
+

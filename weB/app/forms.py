@@ -86,5 +86,8 @@ class RiderProfileForm(forms.ModelForm):
             'address_rd': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-
+class UpdatePriceForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['price']
 

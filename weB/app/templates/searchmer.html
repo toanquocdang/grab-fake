@@ -1,0 +1,14 @@
+{% extends 'merchants.html' %}
+{% load static %}
+{% block content %}
+ {%for product in keys %}
+    <div class="col-lg-3">
+        <img class="thumbnail" src="{{ product.ImageURL }} ">
+        <div class="box-element product">
+            <h6><strong>{{product.name}}</strong></h6>
+            <hr>
+            <h3 style="display: inline-block;"><strong>{{product.price | floatformat:3}} VNĐ</strong></h3>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

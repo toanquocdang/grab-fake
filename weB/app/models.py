@@ -105,6 +105,7 @@ class Rider(models.Model):
 class RiderSavedOrders(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE, blank=True, null=True)
+    orders = models.ForeignKey(OrderPlaced, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200, null=True)
     xe = models.CharField(max_length=50, choices=Status_Choices, default='CarNumber')

@@ -44,6 +44,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('about/', views.about, name='about'),
     path('search/', views.search, name='search'),
+     path('searchmer/', views.searchmerchants, name='searchmer'),
     path('update_order_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
     
     path('profilerider/', views.ProfileViewsRider.as_view(), name='profilerider'),
@@ -56,6 +57,7 @@ urlpatterns = [
     path('dashboardmer/', views.dashboardmer , name = 'dashboardmer'),
     path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
     path('ridersave/<int:order_id>/', views.ridersave, name='ridersave'),
-     path('savedorders/', views.savedorders, name='savedorders')
+     path('savedorders/', views.savedorders, name='savedorders'),
+     path('update_price/<int:product_id>/', views.update_price, name='update_price'),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -119,7 +119,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -130,6 +130,13 @@ STATICFILES_DIRS = [
 ]
 MEDIA_URL = '/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'app/static/images')
-LOGIN_REDIRECT_URL = '/profile/'
+DEFAULT_ROLE = 'Customer'
+LOGIN_REDIRECT_URLS = {
+    'Customer': '/profile/',
+    'Merchants': '/profilemerchants/',
+    'Rider': '/profilerider/',
+}
+# Cấu hình LOGIN_REDIRECT_URL
+LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URLS.get(DEFAULT_ROLE)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 STATIC_ROOT = os.path.join(BASE_DIR,'static')

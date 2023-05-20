@@ -5,11 +5,12 @@
     {% for product in products %}
     <div class="col-lg-3">
         <div class="card mb-4">
-            <img class="card-img-top" src="{{ product.ImageURL }}" alt="Product Image">
+            <img class="card-img-top" src="{{ product.ImageURL }}" alt="Product Image" width="300" height="300">
             <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>
                 <p class="card-text">{{ product.price | floatformat:3 }} VNĐ</p>
-                <a href="{% url 'delete_product' product.id %}" class="btn btn-danger btn-sm">Xóa</a>
+                <a href="{% url 'delete_product' product.id %}" class="btn btn-danger btn-sm">Remove</a>
+                <a href="{% url 'update_price' product.id %}" class="btn btn-success btn-sm">Update Price</a>
             </div>
         </div>
     </div>
