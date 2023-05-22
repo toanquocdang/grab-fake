@@ -379,12 +379,20 @@ def update_order_status(request, order_id):
         order = OrderPlaced.objects.get(id=order_id)
         return render(request, 'update_order.html', {'order': order})
 
+def update_rider_status(request, order_id):
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        order = OrderPlaced.objects.get(id=order_id)
+        order.status = new_status
+        order.save()
+        return redirect('saveorder')
 
 
 
 def ordersRider(request):
     orders = OrderPlaced.objects.all()
-    return render(request, 'orderider.html', {'orders': orders})
+    save_order = RiderSavedOrders.objects.all()
+    return render(request, 'orderider.html', {'orders': orders,'save_order': save_order})
 
 
 def addrider(request):
@@ -411,16 +419,20 @@ class ProfileViewsRider(View):
         form  = RiderProfileForm(request.POST)
         if form.is_valid():
             user = request.user
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            address_rd = form.cleaned_data['address_rd']
-            phone = form.cleaned_data['phone']
-            reg = Rider(user = user, name=name ,email=email, address_rd=address_rd,phone=phone)
-            reg.save()
-            messages.success(request,'Lưu Thành Công')
+            if not Rider.objects.filter(user=user).exists():
+                name = form.cleaned_data['name']
+                email = form.cleaned_data['email']
+                address_rd = form.cleaned_data['address_rd']
+                phone = form.cleaned_data['phone']
+                reg = Rider(user = user, name=name ,email=email, address_rd=address_rd,phone=phone)
+                reg.save()
+                messages.success(request,'Lưu Thành Công')
+            else:
+                messages.warning(request, 'Bạn đã có địa chỉ vui lòng cập nhật trong Cập Nhật Thông Tin')
         else:
             messages.warning(request,"Lỗi !!!!")
         return render(request, 'profilerider.html', locals())
+    
     
 def rideraddress(request):
     riders =  Rider.objects.filter(user=request.user)
@@ -519,10 +531,27 @@ def ridersave(request, order_id):
     saved_order.save()
     return redirect('savedorders')
 
-def savedorders(request):
-    rider = get_object_or_404(Rider, user=request.user)  # Assuming the rider is authenticated
-    saved_orders = RiderSavedOrders.objects.filter(rider=rider)
-    return render(request, 'saveorder.html', {'saved_orders': saved_orders})
+def saveorder(request):
+    order_riders = RiderSavedOrders.objects.all()
+    context = {
+        'order_riders': order_riders
+    }
+    return render(request, 'saveorder.html', context= context)
+
+def ridersave(request, order_id):
+    order = OrderPlaced.objects.get(id=order_id)
+    user = request.user
+    rider = Rider.objects.get(user = user)
+    RiderSavedOrders(user = user, rider=rider, orders = order).save()
+    return redirect('saveorder')
+
+def saveorder(request):
+    user = request.user
+    order_riders = RiderSavedOrders.objects.filter(user = user)
+    context = {
+        'order_riders': order_riders
+    }
+    return render(request, 'saveorder.html', context= context)
 
 def update_price(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -535,3 +564,4 @@ def update_price(request, product_id):
         form = UpdatePriceForm(instance=product)
     
     return render(request, 'updatepirce.html', {'form': form})
+

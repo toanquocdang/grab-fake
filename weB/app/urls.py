@@ -57,7 +57,9 @@ urlpatterns = [
     path('dashboardmer/', views.dashboardmer , name = 'dashboardmer'),
     path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
     path('ridersave/<int:order_id>/', views.ridersave, name='ridersave'),
-     path('savedorders/', views.savedorders, name='savedorders'),
-     path('update_price/<int:product_id>/', views.update_price, name='update_price'),
+    path('ridersave/<int:order_id>/', views.ridersave, name='ridersave'),
+    path('update_price/<int:product_id>/', views.update_price, name='update_price'),
+    path('saveorder/', views.saveorder, name='saveorder'),
+     path('update_rider_status/<int:order_id>/', views.update_rider_status, name='update_rider_status'),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
