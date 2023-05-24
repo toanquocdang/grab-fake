@@ -3,34 +3,26 @@
     <div class="container">
         <div class="row">
             {% for order in orders %}
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Khách hàng: {{ order.customer }}</h5>
-                            <p class="card-text">Địa chỉ giao hàng: {{ order.customer.address }}</p>
-                            <p class="card-text">Địa chỉ nhận hàng: {{ order.product.address}}</p>
-                            <p class="card-text">Món: {{ order.product.name}}</p>
-                            <p class="card-text">Số Lượng: {{ order.quantity}}</p>
-                            <p class="card-text">Tổng Tiền Thu: {{ order.total_cost}}</p>
-                            <p class="card-text">phone customer: {{ order.customer.phone }}</p>
-                            <p class="card-text">Trạng thái: {{ order.status }}</p>
-                            <div class="d-grid gap-2">
-                                {% for i in save_order %}
-                                    {% if i.orders != order %}
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Khách hàng: {{ order.customer }}</h5>
+                                <p class="card-text">Địa chỉ giao hàng: {{ order.customer.address }}</p>
+                                <p class="card-text">Địa chỉ nhận hàng: {{ order.product.address }}</p>
+                                <p class="card-text">Món: {{ order.product.name }}</p>
+                                <p class="card-text">Số Lượng: {{ order.quantity }}</p>
+                                <p class="card-text">Tổng Tiền Thu: {{ order.total_cost }}</p>
+                                <p class="card-text">phone customer: {{ order.customer.phone }}</p>
+                                <p class="card-text">Trạng thái: {{ order.status }}</p>
+                                <div class="d-grid gap-2">
                                     <form method="POST" action="{% url 'ridersave' order.id %}">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-success">Nhận Đơn</button>
                                     </form>
-                                    {% else %}
-                                    <form>
-                                        <button type="submit" class="btn btn-danger">Đã nhận Đơn Hàng</button>
-                                    </form>
-                                    {% endif %}
-                                {% endfor %}         
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
             {% endfor %}
         </div>
     </div>

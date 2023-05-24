@@ -1,6 +1,7 @@
 {% extends 'merchants.html' %}
 {% load static %}
 {% block merchants %}
+
 <div class="container">
   <div class="row">
     <div class="col-md-6 offset-md-3">
@@ -11,7 +12,7 @@
           {% if submitted %}
           <p class="text-center">Your Product was submitted successfully!</p>
           {% else %}
-          <form action="" method="POST">
+          <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <div class="text-center">

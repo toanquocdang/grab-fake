@@ -312,8 +312,6 @@ def searchmerchants(request):
     return render(request, 'searchmer.html', {'searched':search,'keys':keys})
 
 
-def rider(request):
-    return render(request, 'rider.html')
 
 def addproduct(request):
     submitted = False
@@ -322,7 +320,7 @@ def addproduct(request):
         if not isinstance(merchant.name, str):
             merchant.delete()
     if request.method == "POST":
-        form= ProductForm (request.POST)
+        form= ProductForm (request.POST, request.FILES)
         if form.is_valid():
             user = request.user
             merchants = Merchants.objects.get(user=user)
@@ -368,31 +366,45 @@ def ordersmc(request):
     return render(request, 'ordermc.html', {'orders': orders_with_products_added_by_merchant})
 
 
+
+
 def update_order_status(request, order_id):
     if request.method == 'POST':
         new_status = request.POST.get('status')
-        order = OrderPlaced.objects.get(id=order_id)
-        order.status = new_status
-        order.save()
+        old = OrderPlaced.objects.get(id = order_id)
+        old_status = old.status
+        if old_status in ['Delivered', 'On the way']:
+            messages.warning(request, 'Đơn hàng đã chuyển sang rider vui lòng không cập nhật đơn hàng !!')
+        else:
+            order = OrderPlaced.objects.get(id=order_id)
+            order.status = new_status
+            order.save()
+            messages.success(request, 'Đã cập nhật trạng thái đơn hàng thành công.')
         return redirect('ordersmc')
-    else:
-        order = OrderPlaced.objects.get(id=order_id)
-        return render(request, 'update_order.html', {'order': order})
+
+
 
 def update_rider_status(request, order_id):
     if request.method == 'POST':
         new_status = request.POST.get('status')
-        order = OrderPlaced.objects.get(id=order_id)
-        order.status = new_status
-        order.save()
+        old = OrderPlaced.objects.get(id = order_id)
+        old_status = old.status
+        if old_status in ['Accepted', 'Pending']:
+            messages.warning(request, 'Đơn hàng chưa sẵn sàng để chuyển phát !')
+        else:
+            order = OrderPlaced.objects.get(id=order_id)
+            order.status = new_status
+            order.save()
+            messages.success(request, 'Đã cập nhật trạng thái đơn hàng thành công.')
         return redirect('saveorder')
 
 
 
 def ordersRider(request):
     orders = OrderPlaced.objects.all()
-    save_order = RiderSavedOrders.objects.all()
-    return render(request, 'orderider.html', {'orders': orders,'save_order': save_order})
+    save_orders = RiderSavedOrders.objects.values_list('orders_id', flat=True)
+    filtered_orders = [order for order in orders if order.id not in save_orders]
+    return render(request, 'orderider.html', {'orders': filtered_orders})
 
 
 def addrider(request):
@@ -565,3 +577,32 @@ def update_price(request, product_id):
     
     return render(request, 'updatepirce.html', {'form': form})
 
+
+def dashboardrider(request):
+    user = request.user
+    rider = Rider.objects.get(user = user)
+    riders = Rider.objects.filter(user = user)
+    order_rider = RiderSavedOrders.objects.filter(user = user, rider = rider)
+    count = 0
+    total_cost = 0
+    count1 = 0
+    s = 0
+    temp = 0
+
+    for order in order_rider:
+        if order.orders.status == "Delivered":
+            count = count + 1
+            total_cost = total_cost + order.orders.product.price + 30
+            s = s + 30
+        else:
+            count1 = count1 + 1
+    context = {
+        'count': count,
+        'total_cost': total_cost,
+        'count1': count1,
+        'order_rider': order_rider,
+        'riders': riders,
+        's': s,
+
+    }
+    return render(request, 'dashboardrider.html', context)

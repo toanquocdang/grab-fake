@@ -9,6 +9,11 @@
                 </ul>
             </div>
             <div class="col-sm-9 offset-sm-1">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 {% for op in orders %}
                 <div class="card mb-4">
                     <div class="card-body">

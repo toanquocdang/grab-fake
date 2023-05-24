@@ -61,5 +61,6 @@ urlpatterns = [
     path('update_price/<int:product_id>/', views.update_price, name='update_price'),
     path('saveorder/', views.saveorder, name='saveorder'),
      path('update_rider_status/<int:order_id>/', views.update_rider_status, name='update_rider_status'),
+     path('dashboardrider/', views.dashboardrider , name = 'dashboardrider'),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

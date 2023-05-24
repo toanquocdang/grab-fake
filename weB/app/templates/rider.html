@@ -50,11 +50,6 @@
         </li>
             </li>
             </ul>
-              <form class="d-flex" role="search" method= POST action="{% url 'search' %}">
-                  {% csrf_token %}
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
-                <button class="btn btn-outline-dark" type="submit">Search</button>
-              </form>
           </div>
           <div>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -64,7 +59,7 @@
                     </a>
                     <ul class="dropdown-menu">
                       <li><a class="dropdown-item" href="{% url 'profilerider' %}">Trang cá nhân</a></li>
-                      <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                      <li><a class="dropdown-item" href="/dashboardrider">Dashboard</a></li>
                       <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Đổi Mật Khẩu</a></li>
                       <li><a class="dropdown-item" href="/logout">Đăng Xuất</a></li>
                       

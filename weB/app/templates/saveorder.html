@@ -1,6 +1,11 @@
 {% extends 'rider.html' %}
 {% block content %}
     <ul>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
         {% for rider in order_riders %}
         <div class="card mb-4">
             <div class="card-body">

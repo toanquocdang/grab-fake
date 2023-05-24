@@ -1,0 +1,81 @@
+{% extends 'rider.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'statusrider.html' %}
+<div class="row">
+
+    <div class="col-md-5">
+        <div class="card card-body">
+            <div class="col">
+                <div class="col-md-6">
+                    <h5>Rider</h5>
+                    <hr>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-primary btn-sm btn-block" href="">Information Rider</a>
+                </div>
+            </div>
+            {% for ri in riders %}
+            <table class="table table-sm">
+                <tr>
+                    <th>Rider</th>
+                    <td>{{ ri.name }}</td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td>{{ ri.phone }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ ri.email }}</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td>{{ ri.address_rd}}</td>
+                </tr>
+            </table>
+                <div class="col-md-6">
+                    <a class="btn btn-primary btn-sm btn-block" href="/rideraddress">Update</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="col-md-7">
+        <h5>LAST 5 ORDERS</h5>
+        <hr>
+        <div class="card card-body">
+            <a class="btn btn-primary btn-sm btn-block" href="">Information Order</a>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Date Order</th>
+                        <th>Total Cost</th>
+                        <th>Status</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for or in order_rider %}
+                    <tr>
+                        <td>{{ or.orders.product }}</td>
+                        <td>{{ or.orders.ordered_date }}</td>
+                        <td>{{ or.orders.total_cost }}</td>
+                        <td>{{ or.orders.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if messages %}
+    <div class="alert alert-dismissible alert-info">
+        {% for message in messages %}
+            <p class="mb-0">{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+</div>
+
+{% endblock %}
