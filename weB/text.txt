@@ -1,6 +1,0 @@
-admin: admin
-password: 777711dangquoctoan
-
-password demo:
-dqt_dz4555(Merchants), dqt_dz123(Customer), dqt_dz789(Rider)
-pass = 777711toan
