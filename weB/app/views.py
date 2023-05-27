@@ -63,6 +63,7 @@ def signup(request):
             #     return redirect('login')
         else:
             messages.warning(request,'Đăng ký không thành công !')
+        return render(request, 'signup.html', context=context)
     
 
 
