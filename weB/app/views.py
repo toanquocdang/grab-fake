@@ -58,15 +58,21 @@ def signup(request):
             user = form.save()
             account = Account(user = user, role = role)
             account.save()
-            messages.success(request, 'Đăng ký Thành Công !')
+            return redirect('login')
             # if user is not None:
             #     return redirect('login')
         else:
             messages.warning(request,'Đăng ký không thành công !')
-        return render(request, 'signup.html', context=context)
+    
 
 
 def customer(request):
+    user = request.user
+    try:
+        rider = Customer.objects.get(user= user)
+    except Customer.DoesNotExist:
+        return redirect('profile')
+    
     totalitem = 0
     if request.user.is_authenticated:
         totalitem = len(Cart.objects.filter(user=request.user))
@@ -91,9 +97,10 @@ class ProfileViews(View):
             reg = Customer(user = user, name=name ,email=email,city=city,phone=phone,state=state, address=address)
             reg.save()
             messages.success(request,'Lưu Thành Công')
+            return redirect('customer')
         else:
             messages.warning(request,"Lỗi !!!!")
-        return render(request, 'profile.html', locals())
+        
 
 def address(request):
     totalitem = 0
@@ -170,6 +177,11 @@ class updateAddress(View):
 
 
 def show_cart(request):
+    user = request.user
+    try:
+        customer = Customer.objects.get(user= user)
+    except Customer.DoesNotExist:
+        return redirect('profile')
     totalitem = 0
     if request.user.is_authenticated:
         totalitem = len(Cart.objects.filter(user=request.user))
@@ -260,6 +272,11 @@ def remove_cart(request):
     
 def done(request):
     user = request.user
+    try:
+        customer = Customer.objects.get(user= user)
+    except Customer.DoesNotExist:
+        return redirect('profile')
+    
     customer = Customer.objects.filter(user=user).latest('id')
     cart = Cart.objects.filter(user=user)
     for c in cart:
@@ -314,13 +331,19 @@ def searchmerchants(request):
 
 
 def addproduct(request):
+    user = request.user
+    try:
+        merchant = Merchants.objects.get(user= user)
+    except Merchants.DoesNotExist:
+        return redirect('profilemerchants')
+    
     submitted = False
     merchants = Merchants.objects.all()
     for merchant in merchants:
         if not isinstance(merchant.name, str):
             merchant.delete()
     if request.method == "POST":
-        form= ProductForm (request.POST, request.FILES)
+        form= ProductForm (request.user, request.POST, request.FILES)
         if form.is_valid():
             user = request.user
             merchants = Merchants.objects.get(user=user)
@@ -331,10 +354,29 @@ def addproduct(request):
             form = ProductForm
             if 'submitted' in request.GET:
                 submitted =True  
-    form = ProductForm()
+    form = ProductForm(request.user)
     return render(request, 'addproduct.html',{'form':form, 'submitted': submitted})
 
+def addrider(request):
+    submitted = False
+    if request.method == "POST":
+        form= RiderProfileForm (request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect ('/merchants?submitted= True')
+    else: 
+            form = RiderProfileForm
+            if 'submitted' in request.GET:
+                submitted =True  
+    form = RiderProfileForm
+    return render(request, 'profilerider.html',{'form':form, 'submitted': submitted})
+
 def merchants(request):
+    user = request.user
+    try:
+        merchant = Merchants.objects.get(user= user)
+    except Merchants.DoesNotExist:
+        return redirect('profilemerchants')
     user = request.user
     merchant = Merchants.objects.filter(user=user)
     name = 'temp'
@@ -354,6 +396,12 @@ def rider(request):
     return render(request, 'rider.html',context)
 
 def ordersmc(request):
+    user = request.user
+    try:
+        merchant = Merchants.objects.get(user= user)
+    except Merchants.DoesNotExist:
+        return redirect('profilemerchants')
+    
     order_placed = OrderPlaced.objects.all()
     user = request.user
     merchants = Merchants.objects.get(user=user)
@@ -401,25 +449,18 @@ def update_rider_status(request, order_id):
 
 
 def ordersRider(request):
+    user = request.user
+    try:
+        rider = Rider.objects.get(user= user)
+    except Rider.DoesNotExist:
+        return redirect('profilerider')
     orders = OrderPlaced.objects.all()
     save_orders = RiderSavedOrders.objects.values_list('orders_id', flat=True)
     filtered_orders = [order for order in orders if order.id not in save_orders]
     return render(request, 'orderider.html', {'orders': filtered_orders})
 
 
-def addrider(request):
-    submitted = False
-    if request.method == "POST":
-        form= RiderProfileForm (request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect ('/merchants?submitted= True')
-    else: 
-            form = ProductForm
-            if 'submitted' in request.GET:
-                submitted =True  
-    form = ProductForm
-    return render(request, 'addproduct.html',{'form':form, 'submitted': submitted})
+
     
 
 
@@ -458,7 +499,7 @@ class updateAddressRider(View):
     def post(selff,request, pk):
         form = RiderProfileForm(request.POST)
         if form.is_valid():
-            rider = Merchants.objects.get(pk=pk)
+            rider = Rider.objects.get(pk=pk)
             rider.name = form.cleaned_data['name']
             rider.email = form.cleaned_data['email']
             rider.address_rd = form.cleaned_data['address_rd']
@@ -474,9 +515,10 @@ def dashboardcus(request):
     user = request.user
     customer = Customer.objects.filter(user=user)
     orders = OrderPlaced.objects.filter(user = user)
-    total_order = orders.count()
-    dilivery = OrderPlaced.objects.filter(status = 'Delivered').count()
-    pending = OrderPlaced.objects.filter(status = 'Pending').count()
+    orders_cancel =  OrderPlaced.objects.filter(user = user, status = 'Cancel')
+    total_order = orders.count() - orders_cancel.count()
+    dilivery = OrderPlaced.objects.filter(user = user,status = 'Delivered').count()
+    pending = OrderPlaced.objects.filter(user= user,status = 'Pending').count()
     context = {
         'orders': orders,
         'customer': customer,
@@ -536,6 +578,7 @@ def delete_product(request, product_id):
 
 
 def ridersave(request, order_id):
+    
     order = get_object_or_404(OrderPlaced, id=order_id)
     rider = get_object_or_404(Rider, user=request.user)  # Assuming the rider is authenticated
     saved_order = RiderSavedOrders.objects.create(user=rider.user, rider=rider, name=rider.name, email=rider.email, xe=rider.xe, phone=rider.phone, address_rd=rider.address_rd)

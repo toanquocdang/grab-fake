@@ -3,16 +3,22 @@
 
 {% block content %}
 <style>
+    .card {
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
     .card-title {
         font-size: 28px;
         font-weight: bold;
         text-align: center;
         color: #333;
         margin-bottom: 30px;
-    }
-
-    .card-body {
-        padding: 20px;
     }
 
     h4 {
@@ -26,12 +32,7 @@
         font-size: 18px;
         color: #777;
         margin-bottom: 15px;
-    }
-
-    .highlight {
-        background-color: #f8f9fa;
-        padding: 10px;
-        border-radius: 5px;
+        text-align: center;
     }
 </style>
 
@@ -39,22 +40,20 @@
     <div class="row justify-content-center">
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Contact Us</h2>
-                    <hr>
-                    <div class="row">
-                        <div class="col-12">
-                            <h4 class="mb-3 highlight">Address</h4>
-                            <p class="text-center">Đại Học Công Nghiệp Thành Phố Hồ Chí Minh</p>
-                        </div>
-                        <div class="col-12">
-                            <h4 class="mb-3 highlight">Hotline</h4>
-                            <p class="text-center">0385721588</p>
-                        </div>
-                        <div class="col-12">
-                            <h4 class="mb-3 highlight">Email</h4>
-                            <p class="text-center">quoctoan040501@gmail.com</p>
-                        </div>
+                <h2 class="card-title">Contact Us</h2>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class="mb-3">Address</h4>
+                        <p>Đại Học Công Nghiệp Thành Phố Hồ Chí Minh</p>
+                    </div>
+                    <div class="col-12">
+                        <h4 class="mb-3">Hotline</h4>
+                        <p>0385721588</p>
+                    </div>
+                    <div class="col-12">
+                        <h4 class="mb-3">Email</h4>
+                        <p>quoctoan040501@gmail.com</p>
                     </div>
                 </div>
             </div>

@@ -7,8 +7,8 @@
     </div>
     <div class="col-sm-2 border-end">
         <ul class="list-unstyled">
-            <li class="d-grid"><a href="{% url 'profilerider' %}" class="btn"> Trang Cá Nhân</a></li>
-            <li class="d-grid"><a href="{% url 'rideraddress' %}" class="btn btn-primary">Cập Nhật Thông Tin</a></li>
+            <li class="d-grid"><a href="{% url 'profilerider' %}" class="btn"> add information address</a></li>
+            <li class="d-grid"><a href="{% url 'rideraddress' %}" class="btn btn-primary">address</a></li>
         </ul>
     </div>
     <div class="col-sm-9 offset-sm-1">
@@ -17,7 +17,6 @@
             <div class="col-sm-6">
                 <div class="cart m-2">
                     <div class="card-body">
-                        <img class="thumbnail" src="{{ rider.ImageURL }} " width="300" height="300">
                         <p> Name: {{ rider.name }}</p>
                         <p> Email: {{ rider.email }}</p>
                         <p> Địa Chỉ: {{ rider.address_rd }}</p>

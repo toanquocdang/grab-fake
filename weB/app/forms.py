@@ -61,6 +61,9 @@ class ProductForm(ModelForm):
             'price': forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Price'}),
             'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Address'}),
          }
+    def __init__(self, user, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+        self.fields['merchants'].queryset = Merchants.objects.filter(user=user)
 
 class MerchantsProfileForm(forms.ModelForm):
     class Meta:
