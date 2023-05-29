@@ -3,6 +3,7 @@
     <div class="container">
         <div class="row">
             {% for order in orders %}
+                {% if not order.status == 'Cancel' and not order.status == 'On the way' and not order.status == 'Delivered' %}
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
@@ -23,6 +24,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
             {% endfor %}
         </div>
     </div>
