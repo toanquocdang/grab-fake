@@ -1,4 +1,4 @@
-*web delivery management using: *
+*web delivery management using:*
 ```
 django
 html
