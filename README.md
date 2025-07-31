@@ -1,11 +1,3 @@
-*Bài tập phát triển ứng dụng*
+***Practice building a foundation with django***
 
-*web delivery management using:*
-```
-django
-html
-css
-sqlite3
-pillow
-```
 
